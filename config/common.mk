@@ -1,5 +1,7 @@
 # Allow vendor/extra to override any property by setting it first
 $(call inherit-product-if-exists, vendor/extra/product.mk)
+$(call inherit-product-if-exists, vendor/lineage/config/sakura.mk)
+$(call inherit-product-if-exists, vendor/addons/config.mk)
 
 # Exclude repos from bp scanning
 PRODUCT_SOURCE_ROOT_DIRS += -kernel/platform
@@ -8,7 +10,7 @@ PRODUCT_SOURCE_ROOT_DIRS += -prebuilts/misc/protobuf_vendorcompat
 # Allow vendor prebuilt repos to exclude themselves from bp scanning
 -include $(sort $(wildcard vendor/*/*/exclude-bp.mk))
 
-PRODUCT_BRAND ?= LineageOS
+PRODUCT_BRAND ?= ProjectSakura
 
 ifeq ($(PRODUCT_GMS_CLIENTID_BASE),)
 PRODUCT_PRODUCT_PROPERTIES += \
@@ -300,6 +302,23 @@ PRODUCT_PACKAGE_OVERLAYS += vendor/crowdin/overlay
 
 PRODUCT_EXTRA_RECOVERY_KEYS += \
     vendor/lineage/build/target/product/security/lineage
+
+# Official and Unoffical
+ifeq ($(SAKURA_OFFICIAL), true)
+    SAKURA_BUILD := OFFICIAL
+else
+    SAKURA_BUILD := UNOFFICIAL
+endif
+
+# Build type
+ifeq ($(SAKURA_BUILD_TYPE), gapps)
+     SAKURA_BUILD_ZIP_TYPE := GAPPS
+ifeq ($(WITH_GMS), true)
+$(call inherit-product-if-exists, vendor/gms/products/gms.mk)
+endif
+else
+     SAKURA_BUILD_ZIP_TYPE := VANILLA
+endif
 
 include vendor/lineage/config/version.mk
 
