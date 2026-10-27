@@ -25,6 +25,8 @@ $(LINEAGE_TARGET_PACKAGE): $(INTERNAL_OTA_PACKAGE_TARGET)
 	$(hide) $(SHA256) $(LINEAGE_TARGET_PACKAGE) | sed "s|$(PRODUCT_OUT)/||" > $(LINEAGE_TARGET_PACKAGE).sha256sum
 	$(hide) rm -rf $(call intermediates-dir-for,PACKAGING,target_files)
 	@echo "Package Complete: $(LINEAGE_TARGET_PACKAGE)" >&2
+	@echo "Build is getting done..." >&2
+	$(hide) ./vendor/lineage/build/tools/banner.sh
 
 .PHONY: bacon
 bacon: $(LINEAGE_TARGET_PACKAGE) $(DEFAULT_GOAL)
